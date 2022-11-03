@@ -1,11 +1,14 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace AdminPanelWPF.Models
 {
@@ -20,6 +23,7 @@ namespace AdminPanelWPF.Models
         public string FileName { get; set; }
         public string Page { get; set; }
         public string FileContent { get; set; }
+        public int Progress { get; set; } = 0;
         public string Console { get; set; }
         public void OpenFile(string filter)
         {
@@ -45,7 +49,7 @@ namespace AdminPanelWPF.Models
             while (!reader.EndOfStream)
             {
                 string line = reader.ReadLine();
-                if (line.Contains(".inc.php"))
+                if (line.Contains(".inc.php") && line != "feedback.inc.php")
                 {
                     listPages.Add(line);
                 }
@@ -93,7 +97,7 @@ namespace AdminPanelWPF.Models
             }
             return links;
         }
-        private List<string> CollectionFile()/// Собрать файлы
+        public List<string> CollectionFile()/// Собрать файлы
         {
             Connect("Files/");
             reqFTP.Method = WebRequestMethods.Ftp.ListDirectory;
@@ -110,19 +114,7 @@ namespace AdminPanelWPF.Models
             reader.Close();
             resp.Close();
             return files;
-        }
-        public void SavePage()
-        {
-            string path = @$"C:\Temp\{Page}";
-            if (!Directory.Exists("C:\\Temp\\"))
-            {
-                Directory.CreateDirectory("C:\\Temp\\");
-            }
-            File.WriteAllText(path, FileContent);
-            string uri = Connect($"content/");
-            FTPUploadFile(uri, path, Page);/// Загружаем измененный файл
-            Console = $"Страница успешно сохранена!";
-        }
+        }     
         public void DeleteFiles()
         {
             string links = ReadAllPages();
@@ -140,6 +132,18 @@ namespace AdminPanelWPF.Models
                 }
             }
             Console = $"Удалено - {count} файлов!";
+        }
+        public void SavePage()
+        {
+            string path = @$"C:\Temp\{Page}";
+            if (!Directory.Exists("C:\\Temp\\"))
+            {
+                Directory.CreateDirectory("C:\\Temp\\");
+            }
+            File.WriteAllText(path, FileContent);
+            string uri = Connect($"content/");
+            FTPUploadFile(uri, path, Page);/// Загружаем измененный файл
+            Console = $"Страница успешно сохранена!";
         }
         private void PostfixName()/// Если название файлов совпадает, добавляем постфикс 
         {

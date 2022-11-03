@@ -8,7 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Views\" />
+    <None Remove="android-chrome-256x256.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="img\android-chrome-256x256.png" />
   </ItemGroup>
 
 </Project>

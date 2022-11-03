@@ -1,0 +1,38 @@
+﻿<Window x:Class="AdminPanelWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AdminPanelWPF"
+        mc:Ignorable="d"
+        Title="Админ панель" Height="450" Width="800" WindowStartupLocation="CenterScreen" FontFamily="Tahoma" Icon="/img/android-chrome-256x256.png" WindowStyle="ThreeDBorderWindow">
+    <Window.Effect>
+        <DropShadowEffect/>
+    </Window.Effect>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="413*"/>
+            <ColumnDefinition Width="73*"/>
+            <ColumnDefinition Width="314*"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.ColumnSpan="3" VerticalAlignment="Bottom" LastChildFill="False">
+            <Label x:Name="labelConsole" Width="596" FontWeight="Bold" Content="Console" FontFamily="Tahoma" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom" Foreground="#FF235F08" />
+            <Button x:Name="BtnSave" Content="Сохранить" DockPanel.Dock="Right" Width="120" Click="BtnSave_Click" VerticalAlignment="Bottom" HorizontalAlignment="Right" Height="20.4833333333333" FontFamily="Arial" />
+        </DockPanel>
+        <DockPanel Grid.ColumnSpan="3" VerticalAlignment="Top" LastChildFill="False" >
+            <Button x:Name="btnDeleteFiles" Content="Очистка" DockPanel.Dock="Right" Width="120" Click="btnDeleteFiles_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20.4833333333333" FontFamily="Arial"/>
+            <ComboBox x:Name="ComboPages" DockPanel.Dock="Left" Width="131" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Cascadia Mono"/>
+            <Button x:Name="btnLoadFile" Content="Загрузить файл" Click="btnLoadFile_Click" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20.4833333333333" FontFamily="Arial"/>
+            <Button x:Name="btnLoadImage" Content="Загрузить картинку" Width="117" Click="btnLoadImage_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20.4833333333333" FontFamily="Arial"/>
+            <ProgressBar x:Name="progressBar1" DockPanel.Dock="Right" Width="258"/>
+        </DockPanel>
+        <RichTextBox x:Name="richTextBox1" Margin="0,20,0,24" Grid.ColumnSpan="3" FontFamily="Cascadia Mono" FontSize="14">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text=" Текст"/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+
+    </Grid>
+</Window>
