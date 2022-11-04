@@ -13,7 +13,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using AdminPanelWPF.SyntaxPaint;
 using System.Threading;
 using System.Dynamic;
 using System.Windows.Automation;
@@ -22,6 +21,8 @@ using System.Reflection.Emit;
 using System.Diagnostics;
 using System.Net;
 using System.Numerics;
+using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace AdminPanelWPF
 {
@@ -31,7 +32,6 @@ namespace AdminPanelWPF
     public partial class MainWindow : Window
     {
         MainModel mModel = new MainModel();
-        //SyntaxPaint syntax = new SyntaxPaint();
         public MainWindow()
         {
             Config.CreateConfig();
@@ -44,16 +44,54 @@ namespace AdminPanelWPF
             richTextBox1.Document.Blocks.Clear();
             mModel.Page = ComboPages.SelectedItem.ToString();
             richTextBox1.Document.Blocks.Add(new Paragraph(new Run(mModel.ReadPage())));
-            labelConsole.Content = mModel.Console;
-            UpdateRTB(richTextBox1);
+            //UpdateRTB(richTextBox1);
+            Regex reg = new Regex(@"[;+\-\*/\{}:<>]|#|title|keywords|description|template|page_blocks|Содержание страницы|EOF", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            var start = richTextBox1.Document.ContentStart;
+            while (start != null && start.CompareTo(richTextBox1.Document.ContentEnd) < 0)
+            {
+                if (start.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
+                {
+                    var match = reg.Match(start.GetTextInRun(LogicalDirection.Forward));
+                    var textrange = new TextRange(start.GetPositionAtOffset(match.Index, LogicalDirection.Forward), start.GetPositionAtOffset(match.Index + match.Length, LogicalDirection.Backward));
+                    textrange.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(Colors.DarkGreen));
+                    start = textrange.End; 
+                }
+                start = start.GetNextContextPosition(LogicalDirection.Forward);
+            }
         }
-
+        private void btnB_Click(object sender, RoutedEventArgs e)// Жирный шрифт
+        {
+            //richTextBox1.Selection.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Bold);
+            TextEdit('b');
+        }
+        private void btnI_Click(object sender, RoutedEventArgs e)// Курсив
+        {
+            //richTextBox1.Selection.ApplyPropertyValue(TextElement.FontStyleProperty, FontStyles.Italic);
+            TextEdit('i');
+        }
+        private void btnU_Click(object sender, RoutedEventArgs e)// Подчеркнутый
+        {
+            //richTextBox1.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, TextDecorations.Underline);
+            TextEdit('u');
+        }
+        private void btnP_Click(object sender, RoutedEventArgs e)// Параграф
+        {
+            TextEdit('p');
+        }
+        void TextEdit(char tag)
+        {           
+            string selectedText = richTextBox1.Selection.Text;
+            int count = selectedText.Count();
+            richTextBox1.Selection.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.OrangeRed);
+            richTextBox1.Selection.Text = String.Empty;
+            richTextBox1.CaretPosition.InsertTextInRun($"<{tag}>{selectedText}</{tag}>");
+        }
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             mModel.Page = ComboPages.Text;
             mModel.FileContent = new TextRange(richTextBox1.Document.ContentStart, richTextBox1.Document.ContentEnd).Text;/// Извлечь текстовое содержимое из RichTextBox
             mModel.SavePage();
-            labelConsole.Content = mModel.Console;
+            MessageBox.Show(mModel.Console, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Information);
             Timer();
         }
 
@@ -61,11 +99,7 @@ namespace AdminPanelWPF
         {
             mModel.OpenFile("PDF Files (*.pdf)|*.pdf|All Files(*.*)|*.*");
             richTextBox1.CaretPosition.InsertTextInRun($"<a href=\"/Files/{mModel.FileName}\" target=\"_blank\">Открыть файл</a>");/// Вставить текст в положение курсора
-
-            //TextRange textRange = new TextRange(richTextBox1.Document.ContentEnd, richTextBox1.Document.ContentEnd);
-            //textRange.Text = $"<a href=\"/Files/{mModel.FileName}\" target=\"_blank\">Открыть файл</a>";
-            //textRange.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);
-            labelConsole.Content = mModel.Console;
+            MessageBox.Show(mModel.Console, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Information);
             Timer();
         }
 
@@ -73,31 +107,15 @@ namespace AdminPanelWPF
         {
             btnDeleteFiles.IsEnabled = false;
             await Task.Run(() => mModel.DeleteFiles());
-            labelConsole.Content = mModel.Console;
+            MessageBox.Show(mModel.Console, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Information);
             Timer();
             btnDeleteFiles.IsEnabled = true;
-        }
-        private void Process()
-        {
-            //string links = mModel.ReadAllPages();
-            //List<string> files = mModel.CollectionFile();
-            //Dispatcher.Invoke(new Action(() => {
-
-            //    int count = 0;
-            //    progressBar1.Maximum = files.Count;
-            //    foreach (var item in files)
-            //    {
-            //        Thread.Sleep(100);
-            //        mModel.DeleteFiles(links, item);
-            //        progressBar1.Value = count++;
-            //    }              
-            //}));
         }
         private void btnLoadImage_Click(object sender, RoutedEventArgs e)
         {
             mModel.OpenFile("IMG Files (*.bmp, *.jpg, *.png)|*.bmp;*.jpg;*.png");
             richTextBox1.CaretPosition.InsertTextInRun($"<img src=\"/Files/{mModel.FileName}\" width=\"150\" \"alt=\"\" >");/// Вставить текст в положение курсора
-            labelConsole.Content = mModel.Console;
+            MessageBox.Show(mModel.Console, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Information);
             Timer();
         }
         void Timer()
@@ -109,93 +127,15 @@ namespace AdminPanelWPF
         }
         void InitialState(object sender, EventArgs e)
         {
-            labelConsole.Content = "Console";
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
         }
-
-
-
-
-
-
-
-
-
-
-        #region SyntaxPaint
-        public async void UpdateRTB(RichTextBox richTextBox)
+        private void Hyperlink_Request(object sender, RequestNavigateEventArgs e)
         {
-            richTextBox.IsEnabled = false;
-            var doc = richTextBox.Document;
-            await UpdateAllParagraphs(GetParagraphs(doc.Blocks).ToList());
-            richTextBox.IsEnabled = true;
+            //System.Diagnostics.Process.Start("https://alesunix.github.io/");
+            //System.Diagnostics.Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            //e.Handled = true;
         }
-        IEnumerable<Paragraph> GetParagraphs(BlockCollection blockCollection)
-        {
-            foreach (var block in blockCollection)
-            {
-                var para = block as Paragraph;
-                if (para != null)
-                {
-                    yield return para;
-                }
-                else
-                {
-                    foreach (var innerPara in GetParagraphs(block.SiblingBlocks))
-                        yield return innerPara;
-                }
-            }
-        }
-        async Task UpdateParagraph(Paragraph par)
-        {
-            var completeTextRange = new TextRange(par.ContentStart, par.ContentEnd);
-            completeTextRange.ClearAllProperties();
-            await UpdateInlines(par.Inlines);
-        }
-        async Task UpdateAllParagraphs(IEnumerable<Paragraph> paragraphs)
-        {
-            var materialParagraphs = paragraphs.ToList();
-            if (materialParagraphs.Count == 0)
-                return;
-            var completeTextRange = new TextRange(materialParagraphs.First().ContentStart,
-                                                  materialParagraphs.Last().ContentEnd);
-            completeTextRange.ClearAllProperties();
-            await UpdateInlines(materialParagraphs.SelectMany(par => par.Inlines));
-        }
-        async Task UpdateInlines(IEnumerable<Inline> inlines)
-        {
-            var texts = ExtractText(inlines);
-            var positionsAndBrushes =
-                (from qualifiedToken in await Lexer.Parse(texts)
-                 let brush = GetBrushForTokenType(qualifiedToken.Type)
-                 where brush != null
-                 let start = qualifiedToken.StartPosition.GetPositionAtOffset(qualifiedToken.StartOffset)
-                 let end = qualifiedToken.EndPosition.GetPositionAtOffset(qualifiedToken.EndOffset)
-                 let position = new TextRange(start, end)
-                 select new { position, brush }).ToList();
 
-            foreach (var pb in positionsAndBrushes)
-                pb.position.ApplyPropertyValue(TextElement.ForegroundProperty, pb.brush);
-        }
-        Brush GetBrushForTokenType(TokenType tokenType) =>
-            tokenType switch
-            {
-                TokenType.Comment => Brushes.Brown,
-                TokenType.Keyword => Brushes.OrangeRed,
-                TokenType.Number => Brushes.Blue,
-                TokenType.Punct => Brushes.Green,
-                TokenType.String => Brushes.DarkRed,
-                _ => null
-            };
-        IEnumerable<RawText> ExtractText(IEnumerable<Inline> inlines) =>
-            inlines.SelectMany(inline => inline switch
-            {
-                Run run => new[] { new RawText() { Text = run.Text, Start = run.ContentStart } },
-                LineBreak br => new[] { new RawText() { Text = "\n", Start = br.ContentStart } },
-                Span span => ExtractText(span.Inlines),
-                _ => Enumerable.Empty<RawText>()
-            });
-        #endregion
     }
 }

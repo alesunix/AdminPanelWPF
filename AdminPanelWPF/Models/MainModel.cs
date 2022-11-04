@@ -174,14 +174,16 @@ namespace AdminPanelWPF.Models
             string uri = Connect("Files/");
             FileInfo info = new FileInfo(path);/// Получить информацию о файле
             FileName = info.Name;
-            PostfixName();
+            
             if (FTPCheckFolder("Files"))/// Проверяем, есть ли папка на фтп-сервере
             {
+                PostfixName();
                 FTPUploadFile(uri, path, FileName);/// Загружаем файл
             }
             else
             {
                 FTPCreateFolder("Files");/// Создаем папку на фтп-сервере
+                PostfixName();
                 FTPUploadFile(uri, path, FileName);
             }
         }

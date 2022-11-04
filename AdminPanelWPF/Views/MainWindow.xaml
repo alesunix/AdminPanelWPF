@@ -16,23 +16,29 @@
             <ColumnDefinition Width="314*"/>
         </Grid.ColumnDefinitions>
         <DockPanel Grid.ColumnSpan="3" VerticalAlignment="Bottom" LastChildFill="False">
-            <Label x:Name="labelConsole" Width="596" FontWeight="Bold" Content="Console" FontFamily="Tahoma" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom" Foreground="#FF235F08" />
             <Button x:Name="BtnSave" Content="Сохранить" DockPanel.Dock="Right" Width="120" Click="BtnSave_Click" VerticalAlignment="Bottom" HorizontalAlignment="Right" Height="20.4833333333333" FontFamily="Arial" />
+            <TextBlock FontSize="10" Foreground="Black" Width="85.877" HorizontalAlignment="Left" VerticalAlignment="Bottom"><Hyperlink NavigateUri="https://alesunix.github.io/" RequestNavigate="Hyperlink_Request"><Run Text="Designed by Alesunix"/></Hyperlink></TextBlock>
         </DockPanel>
         <DockPanel Grid.ColumnSpan="3" VerticalAlignment="Top" LastChildFill="False" >
             <Button x:Name="btnDeleteFiles" Content="Очистка" DockPanel.Dock="Right" Width="120" Click="btnDeleteFiles_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20.4833333333333" FontFamily="Arial"/>
-            <ComboBox x:Name="ComboPages" DockPanel.Dock="Left" Width="131" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Cascadia Mono"/>
-            <Button x:Name="btnLoadFile" Content="Загрузить файл" Click="btnLoadFile_Click" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20.4833333333333" FontFamily="Arial"/>
-            <Button x:Name="btnLoadImage" Content="Загрузить картинку" Width="117" Click="btnLoadImage_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20.4833333333333" FontFamily="Arial"/>
-            <ProgressBar x:Name="progressBar1" DockPanel.Dock="Right" Width="258"/>
+            <ComboBox x:Name="ComboPages" DockPanel.Dock="Left" Width="131" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Cascadia Mono" Height="20.4833333333333"/>
+            <Button x:Name="btnLoadFile" Content="Загрузить файл" Click="btnLoadFile_Click" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20.4833333333333" FontFamily="Arial" Margin="1,0,0,0"/>
+            <Button x:Name="btnLoadImage" Content="Загрузить картинку" Width="117" Click="btnLoadImage_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20.4833333333333" FontFamily="Arial" Margin="1,0,0,0"/>
+            <ProgressBar x:Name="progressBar1" DockPanel.Dock="Right" Width="175" Margin="0,0,5,0"/>
         </DockPanel>
-        <RichTextBox x:Name="richTextBox1" Margin="0,20,0,24" Grid.ColumnSpan="3" FontFamily="Cascadia Mono" FontSize="14">
+        <RichTextBox x:Name="richTextBox1" VerticalScrollBarVisibility="Visible" Margin="0,47,0,24" Grid.ColumnSpan="3" FontFamily="Cascadia Mono" FontSize="14" Background="#FFF7FBD6">
             <FlowDocument>
                 <Paragraph>
-                    <Run Text=" Текст"/>
+                    <Run Text=" Шаблон текста"/>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
+        <DockPanel LastChildFill="False" Margin="0,22,0,0" Grid.ColumnSpan="3" Height="20.4833333333333" VerticalAlignment="Top" Background="#FF74B7EC">
+            <Button x:Name="btnB" Content="B" DockPanel.Dock="Left" Width="20.4833333333333" Height="20.4833333333333" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnB_Click"/>
+            <Button x:Name="btnI" Content="𝑰" DockPanel.Dock="Left" Click="btnI_Click" Width="20.483" Margin="1,0,0,0"/>
+            <Button x:Name="btnU" Content="U̲" DockPanel.Dock="Left" Click="btnU_Click" Width="20.483" Margin="1,0,0,0"/>
+            <Button x:Name="btnP" Content="¶" DockPanel.Dock="Left" Click="btnP_Click" Width="20.483" Margin="5,0,0,0"/>
+        </DockPanel>
 
     </Grid>
 </Window>
