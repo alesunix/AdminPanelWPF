@@ -23,6 +23,8 @@ using System.Net;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Windows.Controls.Primitives;
+using static AdminPanelWPF.Models.MainModel;
 
 namespace AdminPanelWPF
 {
@@ -32,11 +34,13 @@ namespace AdminPanelWPF
     public partial class MainWindow : Window
     {
         MainModel mModel = new MainModel();
+        private EditMenu flag;
         public MainWindow()
         {
             Config.CreateConfig();
             InitializeComponent();
             this.Title += Version.Ver;
+
             ComboPages.ItemsSource = mModel.ListPages();
             ComboPages.SelectionChanged += ComboPages_SelectionChanged;
         }
@@ -45,7 +49,7 @@ namespace AdminPanelWPF
             richTextBox1.Document.Blocks.Clear();
             mModel.Page = ComboPages.SelectedItem.ToString();
             richTextBox1.Document.Blocks.Add(new Paragraph(new Run(mModel.ReadPage())));
-            //UpdateRTB(richTextBox1);
+
             Regex reg = new Regex(@"[;+\-\*/\{}:<>]|#|title|keywords|description|template|page_blocks|Содержание страницы|EOF", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             var start = richTextBox1.Document.ContentStart;
             while (start != null && start.CompareTo(richTextBox1.Document.ContentEnd) < 0)
@@ -55,32 +59,33 @@ namespace AdminPanelWPF
                     var match = reg.Match(start.GetTextInRun(LogicalDirection.Forward));
                     var textrange = new TextRange(start.GetPositionAtOffset(match.Index, LogicalDirection.Forward), start.GetPositionAtOffset(match.Index + match.Length, LogicalDirection.Backward));
                     textrange.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.DarkGreen);
-                    start = textrange.End; 
+                    start = textrange.End;
                 }
                 start = start.GetNextContextPosition(LogicalDirection.Forward);
             }
         }
-        private void btnB_Click(object sender, RoutedEventArgs e)// Жирный шрифт
+        private void btnEditMenu_Click(object sender, RoutedEventArgs e)
         {
-            //richTextBox1.Selection.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Bold);
-            TextEdit('b');
+            var btnName = (sender as Button).Name;
+            switch (btnName)
+            {
+                case "btnB": flag = EditMenu.Bold; break;
+                case "btnI": flag = EditMenu.Italic; break;
+                case "btnU": flag = EditMenu.Underlined; break;
+                case "btnP": flag = EditMenu.Paragraph; break;
+            }
+            TextEdit(flag);
         }
-        private void btnI_Click(object sender, RoutedEventArgs e)// Курсив
+        void TextEdit(EditMenu flag)
         {
-            //richTextBox1.Selection.ApplyPropertyValue(TextElement.FontStyleProperty, FontStyles.Italic);
-            TextEdit('i');
-        }
-        private void btnU_Click(object sender, RoutedEventArgs e)// Подчеркнутый
-        {
-            //richTextBox1.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, TextDecorations.Underline);
-            TextEdit('u');
-        }
-        private void btnP_Click(object sender, RoutedEventArgs e)// Параграф
-        {
-            TextEdit('p');
-        }
-        void TextEdit(char tag)
-        {
+            StringBuilder tag = new StringBuilder();
+            switch (flag)
+            {
+                case EditMenu.Bold: tag.Append('b'); break;
+                case EditMenu.Italic: tag.Append('i'); break;
+                case EditMenu.Underlined: tag.Append('u'); break;
+                case EditMenu.Paragraph: tag.Append('p'); break;
+            }
             string selected = richTextBox1.Selection.Text;
             richTextBox1.Selection.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.OrangeRed);
             richTextBox1.Selection.Text = String.Empty;
@@ -90,7 +95,7 @@ namespace AdminPanelWPF
         {
             mModel.Page = ComboPages.Text;
             mModel.FileContent = new TextRange(richTextBox1.Document.ContentStart, richTextBox1.Document.ContentEnd).Text;/// Извлечь текстовое содержимое из RichTextBox          
-            if(MessageBox.Show("Вы действительно хотите сохранить страницу?", "Внимание!", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (MessageBox.Show("Вы действительно хотите сохранить страницу?", "Внимание!", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 mModel.SavePage();
             }
@@ -99,7 +104,7 @@ namespace AdminPanelWPF
         }
         private void btnLoadFile_Click(object sender, RoutedEventArgs e)
         {
-            if(mModel.OpenFile("PDF Files (*.pdf)|*.pdf|All Files(*.*)|*.*") == true)
+            if (mModel.OpenFile("PDF Files (*.pdf)|*.pdf|All Files(*.*)|*.*") == true)
             {
                 richTextBox1.CaretPosition.InsertTextInRun($"<a href=\"/Files/{mModel.FileName}\" target=\"_blank\">Открыть файл</a>");/// Вставить текст в положение курсора
                 MessageBox.Show(mModel.Console, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -108,12 +113,48 @@ namespace AdminPanelWPF
         }
         private void btnLoadImage_Click(object sender, RoutedEventArgs e)
         {
-            if(mModel.OpenFile("IMG Files (*.bmp, *.jpg, *.png)|*.bmp;*.jpg;*.png") == true)
+            if (mModel.OpenFile("IMG Files (*.bmp, *.jpg, *.png)|*.bmp;*.jpg;*.png") == true)
             {
                 richTextBox1.CaretPosition.InsertTextInRun($"<img src=\"/Files/{mModel.FileName}\" width=\"150\" \"alt=\"\" >");/// Вставить текст в положение курсора
                 MessageBox.Show(mModel.Console, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Information);
                 Timer();
-            }           
+            }
+        }
+        private void btnLineBreak_Click(object sender, RoutedEventArgs e)// Перенос строки
+        {
+            richTextBox1.CaretPosition.InsertTextInRun("<br>");
+        }
+        private void btnLine_Click(object sender, RoutedEventArgs e)// Горизонтальная линия
+        {
+            richTextBox1.CaretPosition.InsertTextInRun("<hr>");
+        }
+        
+        private void btnAlignment_Click(object sender, RoutedEventArgs e)
+        {
+            var btnName = (sender as Button).Name;
+            switch (btnName)
+            {
+                case "btnLeftSide": flag = EditMenu.Left; break;
+                case "btnRightSide": flag = EditMenu.Right; break;
+                case "btnCenterSide": flag = EditMenu.Center; break;
+                case "btnJustify": flag = EditMenu.Justify; break;
+            }
+            Alignment(flag);
+        }
+        void Alignment(EditMenu flag)
+        {
+            StringBuilder alignment = new StringBuilder();
+            switch (flag)
+            {
+                case EditMenu.Left: alignment.Append("left"); break;
+                case EditMenu.Right: alignment.Append("right"); break;
+                case EditMenu.Center: alignment.Append("center"); break;
+                case EditMenu.Justify: alignment.Append("justify"); break;
+            }
+            string selected = richTextBox1.Selection.Text;
+            richTextBox1.Selection.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.DarkSlateBlue);
+            richTextBox1.Selection.Text = String.Empty;
+            richTextBox1.CaretPosition.InsertTextInRun($"<div class=\"t-{alignment}\">{selected}</div>");
         }
         private async void btnDeleteFiles_Click(object sender, RoutedEventArgs e)
         {
@@ -122,7 +163,7 @@ namespace AdminPanelWPF
             MessageBox.Show(mModel.Console, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Information);
             Timer();
             btnDeleteFiles.IsEnabled = true;
-        }       
+        }
         void Timer()
         {
             DispatcherTimer timer = new DispatcherTimer();
@@ -143,6 +184,7 @@ namespace AdminPanelWPF
             };
             Process.Start(sInfo);
         }
+
 
     }
 }

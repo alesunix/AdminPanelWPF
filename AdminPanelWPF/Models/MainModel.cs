@@ -14,6 +14,7 @@ namespace AdminPanelWPF.Models
 {
     internal class MainModel
     {
+        public enum EditMenu { Bold, Italic, Underlined, Paragraph, Left, Right, Center, Justify };
         FtpWebRequest reqFTP;
         static string[] index = File.ReadAllLines("Config.ini");
         private static string FTPserver = index[0].ToString().Split('-')[1].Trim();
@@ -46,8 +47,8 @@ namespace AdminPanelWPF.Models
             FtpWebResponse resp = (FtpWebResponse)reqFTP.GetResponse();
             Stream stream = resp.GetResponseStream();
             StreamReader reader = new StreamReader(stream);
-
             List<string> listPages = new List<string>();
+
             while (!reader.EndOfStream)
             {
                 string line = reader.ReadLine();
@@ -116,7 +117,7 @@ namespace AdminPanelWPF.Models
             reader.Close();
             resp.Close();
             return files;
-        }     
+        }
         public void DeleteFiles()
         {
             string links = ReadAllPages();
@@ -176,7 +177,7 @@ namespace AdminPanelWPF.Models
             string uri = Connect("Files/");
             FileInfo info = new FileInfo(path);/// Получить информацию о файле
             FileName = info.Name;
-            
+
             if (FTPCheckFolder("Files"))/// Проверяем, есть ли папка на фтп-сервере
             {
                 PostfixName();

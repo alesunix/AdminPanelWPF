@@ -30,11 +30,11 @@
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-        <DockPanel LastChildFill="False" Margin="0,22,0,0" Grid.ColumnSpan="3" Height="20.4833333333333" VerticalAlignment="Top" Background="#FF74B7EC">
-            <Button x:Name="btnB" Content="B" ToolTip="Жирный шрифт" DockPanel.Dock="Left" Width="20.4833333333333" Height="20.4833333333333" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnB_Click"/>
-            <Button x:Name="btnI" Content="𝑰" ToolTip="Курсив" DockPanel.Dock="Left" Click="btnI_Click" Width="20.483" Margin="1,0,0,0"/>
-            <Button x:Name="btnU" Content="U̲" ToolTip="Подчеркнутый" DockPanel.Dock="Left" Click="btnU_Click" Width="20.483" Margin="1,0,0,0"/>
-            <Button x:Name="btnP" Content="¶" ToolTip="Параграф" DockPanel.Dock="Left" Click="btnP_Click" Width="20.483" Margin="5,0,0,0"/>
+        <DockPanel LastChildFill="False" Margin="0,22,0,0" Grid.ColumnSpan="3" Height="20.4833333333333" VerticalAlignment="Top" Background="#FFAED3F1">
+            <Button x:Name="btnB" Content="B" ToolTip="Жирный шрифт" DockPanel.Dock="Left" Width="20.4833333333333" Height="20.4833333333333" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnEditMenu_Click"/>
+            <Button x:Name="btnI" Content="𝑰" ToolTip="Курсив" DockPanel.Dock="Left" Click="btnEditMenu_Click" Width="20.483" Margin="1,0,0,0"/>
+            <Button x:Name="btnU" Content="U̲" ToolTip="Подчеркнутый" DockPanel.Dock="Left" Click="btnEditMenu_Click" Width="20.483" Margin="1,0,0,0"/>
+            <Button x:Name="btnP" Content="¶" ToolTip="Параграф" DockPanel.Dock="Left" Click="btnEditMenu_Click" Width="20.483" Margin="5,0,0,0"/>
             <Button x:Name="btnLoadFile" Click="btnLoadFile_Click" ToolTip="Загрузить PDF" FontFamily="Arial" Width="20.483" Margin="10,0,0,0">
                 <Button.Background>
                     <ImageBrush ImageSource="/img/Treetog-File-Type-Pdf.ico" Stretch="Uniform" TileMode="None"/>
@@ -46,6 +46,12 @@
                 </Button.Background>
             </Button>
             <Button x:Name="btnDeleteFiles" Content="Очистка" ToolTip="Удаление мусора" DockPanel.Dock="Right" Click="btnDeleteFiles_Click" FontFamily="Arial" Width="100"/>
+            <Button x:Name="btnLineBreak" Content="↩" Click="btnLineBreak_Click" ToolTip="Перенос строки" FontFamily="Arial" DockPanel.Dock="Left" Width="20" Margin="10,0,0,0" Background="#FFDDDDDD"/>
+            <Button x:Name="btnLine" Content="—" Click="btnLine_Click" ToolTip="Горизонтальная линия" FontFamily="Arial" DockPanel.Dock="Left" Width="20" Margin="1,0,0,0" Background="#FFDDDDDD"/>
+            <Button x:Name="btnLeftSide" Content="❰" Click="btnAlignment_Click" ToolTip="По левому краю" FontFamily="Arial" DockPanel.Dock="Left" Width="20" Margin="5,0,0,0" Background="#FFDDDDDD"/>
+            <Button x:Name="btnCenterSide" Content="Ξ" Click="btnAlignment_Click" ToolTip="По центру" FontFamily="Arial" DockPanel.Dock="Left" Width="20" Margin="1,0,0,0" Background="#FFDDDDDD"/>
+            <Button x:Name="btnRightSide" Content="❱" Click="btnAlignment_Click" ToolTip="По правому краю" FontFamily="Arial" DockPanel.Dock="Left" Width="20" Margin="1,0,0,0" Background="#FFDDDDDD"/>
+            <Button x:Name="btnJustify" Content="☰" Click="btnAlignment_Click" ToolTip="По ширине" FontFamily="Arial" DockPanel.Dock="Left" Width="20" Margin="1,0,0,0" Background="#FFDDDDDD"/>
         </DockPanel>
 
     </Grid>
