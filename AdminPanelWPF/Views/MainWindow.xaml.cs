@@ -54,7 +54,7 @@ namespace AdminPanelWPF
                 {
                     var match = reg.Match(start.GetTextInRun(LogicalDirection.Forward));
                     var textrange = new TextRange(start.GetPositionAtOffset(match.Index, LogicalDirection.Forward), start.GetPositionAtOffset(match.Index + match.Length, LogicalDirection.Backward));
-                    textrange.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(Colors.DarkGreen));
+                    textrange.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.DarkGreen);
                     start = textrange.End; 
                 }
                 start = start.GetNextContextPosition(LogicalDirection.Forward);
@@ -137,9 +137,11 @@ namespace AdminPanelWPF
         }
         private void Hyperlink_Request(object sender, RequestNavigateEventArgs e)
         {
-            //System.Diagnostics.Process.Start("https://alesunix.github.io/");
-            //System.Diagnostics.Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
-            //e.Handled = true;
+            var sInfo = new ProcessStartInfo("https://alesunix.github.io/")
+            {
+                UseShellExecute = true,
+            };
+            Process.Start(sInfo);
         }
 
     }
