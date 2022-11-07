@@ -14,7 +14,7 @@ namespace AdminPanelWPF.Models
 {
     internal class MainModel
     {
-        public enum EditMenu { Bold, Italic, Underlined, Paragraph, Left, Right, Center, Justify };
+        public enum EditMenu { Bold, Italic, Underlined, Paragraph, Left, Right, Center, Justify, Br, Hr };
         FtpWebRequest reqFTP;
         static string[] index = File.ReadAllLines("Config.ini");
         private static string FTPserver = index[0].ToString().Split('-')[1].Trim();

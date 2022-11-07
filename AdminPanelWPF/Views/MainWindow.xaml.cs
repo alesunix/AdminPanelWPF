@@ -25,6 +25,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Windows.Controls.Primitives;
 using static AdminPanelWPF.Models.MainModel;
+using System.Windows.Ink;
 
 namespace AdminPanelWPF
 {
@@ -77,6 +78,8 @@ namespace AdminPanelWPF
                 case "btnRightSide": flag = EditMenu.Right; break;
                 case "btnCenterSide": flag = EditMenu.Center; break;
                 case "btnJustify": flag = EditMenu.Justify; break;
+                case "btnLineBreak": flag = EditMenu.Br; break;
+                case "btnLine": flag = EditMenu.Hr; break;
             }
             TextEdit(flag);
         }
@@ -84,6 +87,7 @@ namespace AdminPanelWPF
         {
             StringBuilder tag = new StringBuilder();
             StringBuilder alignment = new StringBuilder();
+            StringBuilder tag2 = new StringBuilder();
             switch (flag)
             {
                 case EditMenu.Bold: tag.Append('b'); break;
@@ -94,11 +98,17 @@ namespace AdminPanelWPF
                 case EditMenu.Right: alignment.Append("right"); break;
                 case EditMenu.Center: alignment.Append("center"); break;
                 case EditMenu.Justify: alignment.Append("justify"); break;
-            }
+                case EditMenu.Br: tag2.Append("<br>"); break;
+                case EditMenu.Hr: tag2.Append("<hr>"); break;
+            }            
             string selected = richTextBox1.Selection.Text;
             richTextBox1.Selection.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.OrangeRed);
             richTextBox1.Selection.Text = String.Empty;
-            string insertText = tag.Length > 0 ? $"<{tag}>{selected}</{tag}>" : $"<div class=\"t-{alignment}\">{selected}</div>";
+            string insertText;
+            if (tag2.Length <= 0)
+                insertText = tag.Length > 0 ? $"<{tag}>{selected}</{tag}>" : $"<div class=\"t-{alignment}\">{selected}</div>";
+            else
+                insertText = tag2.ToString();
             richTextBox1.CaretPosition.InsertTextInRun(insertText);
         }
         private void BtnSave_Click(object sender, RoutedEventArgs e)
@@ -129,16 +139,7 @@ namespace AdminPanelWPF
                 MessageBox.Show(mModel.Console, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Information);
                 Timer();
             }
-        }
-        private void btnLineBreak_Click(object sender, RoutedEventArgs e)// Перенос строки
-        {
-            richTextBox1.CaretPosition.InsertTextInRun("<br>");
-        }
-        private void btnLine_Click(object sender, RoutedEventArgs e)// Горизонтальная линия
-        {
-            richTextBox1.CaretPosition.InsertTextInRun("<hr>");
-        }
-        
+        }     
         private async void btnDeleteFiles_Click(object sender, RoutedEventArgs e)
         {
             btnDeleteFiles.IsEnabled = false;
