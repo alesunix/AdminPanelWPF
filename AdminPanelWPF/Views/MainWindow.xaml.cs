@@ -73,23 +73,33 @@ namespace AdminPanelWPF
                 case "btnI": flag = EditMenu.Italic; break;
                 case "btnU": flag = EditMenu.Underlined; break;
                 case "btnP": flag = EditMenu.Paragraph; break;
+                case "btnLeftSide": flag = EditMenu.Left; break;
+                case "btnRightSide": flag = EditMenu.Right; break;
+                case "btnCenterSide": flag = EditMenu.Center; break;
+                case "btnJustify": flag = EditMenu.Justify; break;
             }
             TextEdit(flag);
         }
         void TextEdit(EditMenu flag)
         {
             StringBuilder tag = new StringBuilder();
+            StringBuilder alignment = new StringBuilder();
             switch (flag)
             {
                 case EditMenu.Bold: tag.Append('b'); break;
                 case EditMenu.Italic: tag.Append('i'); break;
                 case EditMenu.Underlined: tag.Append('u'); break;
                 case EditMenu.Paragraph: tag.Append('p'); break;
+                case EditMenu.Left: alignment.Append("left"); break;
+                case EditMenu.Right: alignment.Append("right"); break;
+                case EditMenu.Center: alignment.Append("center"); break;
+                case EditMenu.Justify: alignment.Append("justify"); break;
             }
             string selected = richTextBox1.Selection.Text;
             richTextBox1.Selection.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.OrangeRed);
             richTextBox1.Selection.Text = String.Empty;
-            richTextBox1.CaretPosition.InsertTextInRun($"<{tag}>{selected}</{tag}>");
+            string insertText = tag.Length > 0 ? $"<{tag}>{selected}</{tag}>" : $"<div class=\"t-{alignment}\">{selected}</div>";
+            richTextBox1.CaretPosition.InsertTextInRun(insertText);
         }
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
@@ -129,33 +139,6 @@ namespace AdminPanelWPF
             richTextBox1.CaretPosition.InsertTextInRun("<hr>");
         }
         
-        private void btnAlignment_Click(object sender, RoutedEventArgs e)
-        {
-            var btnName = (sender as Button).Name;
-            switch (btnName)
-            {
-                case "btnLeftSide": flag = EditMenu.Left; break;
-                case "btnRightSide": flag = EditMenu.Right; break;
-                case "btnCenterSide": flag = EditMenu.Center; break;
-                case "btnJustify": flag = EditMenu.Justify; break;
-            }
-            Alignment(flag);
-        }
-        void Alignment(EditMenu flag)
-        {
-            StringBuilder alignment = new StringBuilder();
-            switch (flag)
-            {
-                case EditMenu.Left: alignment.Append("left"); break;
-                case EditMenu.Right: alignment.Append("right"); break;
-                case EditMenu.Center: alignment.Append("center"); break;
-                case EditMenu.Justify: alignment.Append("justify"); break;
-            }
-            string selected = richTextBox1.Selection.Text;
-            richTextBox1.Selection.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.DarkSlateBlue);
-            richTextBox1.Selection.Text = String.Empty;
-            richTextBox1.CaretPosition.InsertTextInRun($"<div class=\"t-{alignment}\">{selected}</div>");
-        }
         private async void btnDeleteFiles_Click(object sender, RoutedEventArgs e)
         {
             btnDeleteFiles.IsEnabled = false;

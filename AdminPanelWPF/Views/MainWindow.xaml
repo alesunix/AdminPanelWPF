@@ -48,10 +48,10 @@
             <Button x:Name="btnDeleteFiles" Content="Очистка" ToolTip="Удаление мусора" DockPanel.Dock="Right" Click="btnDeleteFiles_Click" FontFamily="Arial" Width="100"/>
             <Button x:Name="btnLineBreak" Content="↩" Click="btnLineBreak_Click" ToolTip="Перенос строки" FontFamily="Arial" DockPanel.Dock="Left" Width="20" Margin="10,0,0,0" Background="#FFDDDDDD"/>
             <Button x:Name="btnLine" Content="—" Click="btnLine_Click" ToolTip="Горизонтальная линия" FontFamily="Arial" DockPanel.Dock="Left" Width="20" Margin="1,0,0,0" Background="#FFDDDDDD"/>
-            <Button x:Name="btnLeftSide" Content="❰" Click="btnAlignment_Click" ToolTip="По левому краю" FontFamily="Arial" DockPanel.Dock="Left" Width="20" Margin="5,0,0,0" Background="#FFDDDDDD"/>
-            <Button x:Name="btnCenterSide" Content="Ξ" Click="btnAlignment_Click" ToolTip="По центру" FontFamily="Arial" DockPanel.Dock="Left" Width="20" Margin="1,0,0,0" Background="#FFDDDDDD"/>
-            <Button x:Name="btnRightSide" Content="❱" Click="btnAlignment_Click" ToolTip="По правому краю" FontFamily="Arial" DockPanel.Dock="Left" Width="20" Margin="1,0,0,0" Background="#FFDDDDDD"/>
-            <Button x:Name="btnJustify" Content="☰" Click="btnAlignment_Click" ToolTip="По ширине" FontFamily="Arial" DockPanel.Dock="Left" Width="20" Margin="1,0,0,0" Background="#FFDDDDDD"/>
+            <Button x:Name="btnLeftSide" Content="❰" Click="btnEditMenu_Click" ToolTip="По левому краю" FontFamily="Arial" DockPanel.Dock="Left" Width="20" Margin="5,0,0,0" Background="#FFDDDDDD"/>
+            <Button x:Name="btnCenterSide" Content="Ξ" Click="btnEditMenu_Click" ToolTip="По центру" FontFamily="Arial" DockPanel.Dock="Left" Width="20" Margin="1,0,0,0" Background="#FFDDDDDD"/>
+            <Button x:Name="btnRightSide" Content="❱" Click="btnEditMenu_Click" ToolTip="По правому краю" FontFamily="Arial" DockPanel.Dock="Left" Width="20" Margin="1,0,0,0" Background="#FFDDDDDD"/>
+            <Button x:Name="btnJustify" Content="☰" Click="btnEditMenu_Click" ToolTip="По ширине" FontFamily="Arial" DockPanel.Dock="Left" Width="20" Margin="1,0,0,0" Background="#FFDDDDDD"/>
         </DockPanel>
 
     </Grid>
