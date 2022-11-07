@@ -9,10 +9,14 @@
 
   <ItemGroup>
     <None Remove="android-chrome-256x256.png" />
+    <None Remove="Views\Dryicons-Aesthetica-2-Image-up.ico" />
+    <None Remove="Views\Treetog-File-Type-Pdf.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="img\android-chrome-256x256.png" />
+    <Resource Include="img\Dryicons-Aesthetica-2-Image-up.ico" />
+    <Resource Include="img\Treetog-File-Type-Pdf.ico" />
   </ItemGroup>
 
 </Project>

@@ -25,7 +25,7 @@ namespace AdminPanelWPF.Models
         public string FileContent { get; set; }
         public int Progress { get; set; } = 0;
         public string Console { get; set; }
-        public void OpenFile(string filter)
+        public bool OpenFile(string filter)
         {
             OpenFileDialog ofd = new OpenFileDialog()
             {
@@ -34,7 +34,9 @@ namespace AdminPanelWPF.Models
             if (ofd.ShowDialog() == true)
             {
                 FTPMain(ofd.FileName);
+                return true;
             }
+            else return false;
         }
         public List<string> ListPages()
         {

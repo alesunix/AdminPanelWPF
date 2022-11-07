@@ -36,6 +36,7 @@ namespace AdminPanelWPF
         {
             Config.CreateConfig();
             InitializeComponent();
+            this.Title += Version.Ver;
             ComboPages.ItemsSource = mModel.ListPages();
             ComboPages.SelectionChanged += ComboPages_SelectionChanged;
         }
@@ -79,30 +80,41 @@ namespace AdminPanelWPF
             TextEdit('p');
         }
         void TextEdit(char tag)
-        {           
-            string selectedText = richTextBox1.Selection.Text;
-            int count = selectedText.Count();
+        {
+            string selected = richTextBox1.Selection.Text;
             richTextBox1.Selection.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.OrangeRed);
             richTextBox1.Selection.Text = String.Empty;
-            richTextBox1.CaretPosition.InsertTextInRun($"<{tag}>{selectedText}</{tag}>");
+            richTextBox1.CaretPosition.InsertTextInRun($"<{tag}>{selected}</{tag}>");
         }
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             mModel.Page = ComboPages.Text;
-            mModel.FileContent = new TextRange(richTextBox1.Document.ContentStart, richTextBox1.Document.ContentEnd).Text;/// Извлечь текстовое содержимое из RichTextBox
-            mModel.SavePage();
+            mModel.FileContent = new TextRange(richTextBox1.Document.ContentStart, richTextBox1.Document.ContentEnd).Text;/// Извлечь текстовое содержимое из RichTextBox          
+            if(MessageBox.Show("Вы действительно хотите сохранить страницу?", "Внимание!", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                mModel.SavePage();
+            }
             MessageBox.Show(mModel.Console, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Information);
             Timer();
         }
-
         private void btnLoadFile_Click(object sender, RoutedEventArgs e)
         {
-            mModel.OpenFile("PDF Files (*.pdf)|*.pdf|All Files(*.*)|*.*");
-            richTextBox1.CaretPosition.InsertTextInRun($"<a href=\"/Files/{mModel.FileName}\" target=\"_blank\">Открыть файл</a>");/// Вставить текст в положение курсора
-            MessageBox.Show(mModel.Console, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Information);
-            Timer();
+            if(mModel.OpenFile("PDF Files (*.pdf)|*.pdf|All Files(*.*)|*.*") == true)
+            {
+                richTextBox1.CaretPosition.InsertTextInRun($"<a href=\"/Files/{mModel.FileName}\" target=\"_blank\">Открыть файл</a>");/// Вставить текст в положение курсора
+                MessageBox.Show(mModel.Console, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Information);
+                Timer();
+            }
         }
-
+        private void btnLoadImage_Click(object sender, RoutedEventArgs e)
+        {
+            if(mModel.OpenFile("IMG Files (*.bmp, *.jpg, *.png)|*.bmp;*.jpg;*.png") == true)
+            {
+                richTextBox1.CaretPosition.InsertTextInRun($"<img src=\"/Files/{mModel.FileName}\" width=\"150\" \"alt=\"\" >");/// Вставить текст в положение курсора
+                MessageBox.Show(mModel.Console, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Information);
+                Timer();
+            }           
+        }
         private async void btnDeleteFiles_Click(object sender, RoutedEventArgs e)
         {
             btnDeleteFiles.IsEnabled = false;
@@ -110,14 +122,7 @@ namespace AdminPanelWPF
             MessageBox.Show(mModel.Console, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Information);
             Timer();
             btnDeleteFiles.IsEnabled = true;
-        }
-        private void btnLoadImage_Click(object sender, RoutedEventArgs e)
-        {
-            mModel.OpenFile("IMG Files (*.bmp, *.jpg, *.png)|*.bmp;*.jpg;*.png");
-            richTextBox1.CaretPosition.InsertTextInRun($"<img src=\"/Files/{mModel.FileName}\" width=\"150\" \"alt=\"\" >");/// Вставить текст в положение курсора
-            MessageBox.Show(mModel.Console, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Information);
-            Timer();
-        }
+        }       
         void Timer()
         {
             DispatcherTimer timer = new DispatcherTimer();
